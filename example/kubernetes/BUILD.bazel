@@ -2,6 +2,10 @@ load("//tools/build_rules:k8s_template.bzl", "k8s_apps_for_contexts", "k8s_objec
 load("//tools/build_rules:container_images.bzl", "tagged_image", "tagged_image_keys")
 load("//lib/kubernetes:contexts.bzl", "k8s_contexts")
 
+load("//tools/build_rules:k8s_contexts.bzl", "k8s_name_for_context")
+
+load("//tools/build_rules:tilt.bzl", "tilt_export")
+
 EXAMPLE_K8S_CONTEXTS = k8s_contexts["example"]
 
 py_binary(
@@ -87,4 +91,18 @@ k8s_apps_for_contexts(
         ":k8s_deployment",
     ],
     visibility = ["//visibility:public"],
+)
+
+tilt_export(name="a1",
+            images={"//example/src/main/java/com/etsy/example:Example-With-YourKit": "example"},
+            k8s_objects= [
+              k8s_name_for_context(":k8s_deployment", k8s_contexts["example"][0]) + '-for-tilt',
+            ],
+)
+
+tilt_export(name="b2",
+            images={"//example/src/main/java/com/etsy/example:Example-With-YourKit": "example"},
+            k8s_objects= [
+              k8s_name_for_context(":k8s_deployment", k8s_contexts["example"][1]) + '-for-tilt',
+            ],
 )

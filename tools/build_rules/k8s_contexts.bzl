@@ -105,4 +105,3 @@ _string_to_file = rule(
     },
     implementation = _string_to_file_impl,
 )
-

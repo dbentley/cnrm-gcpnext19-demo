@@ -77,7 +77,7 @@ argument will make it an optional argument.
         "constant_args": attr.string_dict(
             allow_empty = True,
             doc = """
-Fixed arguments to the binary that do not change based on namespace, cluster, or other variables. 
+Fixed arguments to the binary that do not change based on namespace, cluster, or other variables.
 """,
         ),
         "label_args": attr.label_keyed_string_dict(
@@ -142,6 +142,16 @@ def k8s_object_for_context(name, binary, k8s_context, constant_args = None, labe
         name = name,
         template = tpl_name,
         images = images or {},
+        visibility = visibility,
+        image_chroot = k8s_context.image_chroot,
+        namespace = apply_namespace or k8s_context.namespace,
+        cluster = k8s_context.cluster,
+        user = k8s_context.user,
+        resolver_args = resolver_args,
+    )
+    k8s_object(
+        name = name + '-for-tilt',
+        template = tpl_name,
         visibility = visibility,
         image_chroot = k8s_context.image_chroot,
         namespace = apply_namespace or k8s_context.namespace,
